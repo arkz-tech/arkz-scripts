@@ -1,0 +1,39 @@
+---
+const files = import.meta.glob('/public/*.ps1')
+
+// {
+//   '/public/menu.ps1': [Function: /public/menu.ps1],
+//   '/public/move_nikke_folder.ps1': [Function: /public/move_nikke_folder.ps1]      
+// }
+console.log(files)
+
+const url = new URL(Astro.request.url).origin
+
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Scripts</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">HTTP Directory</h1>
+        <ul class="list-disc space-y-2">
+            {
+                Object.keys(files).map((file) => {
+                    return (
+                        <li>
+                            <a href={`${url}/${file.replace('/public/', '')}`} class="text-blue-500 hover:underline">
+                                {file.replace('/public/', '')}
+                            </a>
+                        </li>
+                    );
+                })
+            }
+        </ul>
+    </div>
+</body>
+</html>
