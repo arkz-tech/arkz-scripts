@@ -1,47 +1,51 @@
-# Astro Starter Kit: Minimal
+# Arkz-Scripts 🎮💻
 
-```sh
-npm create astro@latest -- --template minimal
+Welcome to arkz-scripts, your go-to PowerShell toolkit for enhancing your "Nikke: Goddess of Victory" gaming experience!
+
+## 📌 Overview
+
+This repository contains a collection of useful PowerShell scripts designed to streamline and improve various aspects of playing "Nikke: Goddess of Victory". Our scripts are tailored specifically for Windows users and can be executed with a single command.
+
+## 🚀 Quick Start
+
+To run our scripts, simply open PowerShell and execute the following command:
+
+```powershell
+irm https://scripts.arkz.tech | iex
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+This command will fetch and execute our script runner, giving you access to all available utilities.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🛠️ Features
 
-## 🚀 Project Structure
+- Easy-to-use PowerShell scripts
+- Designed specifically for "Nikke: Goddess of Victory"
+- Windows-compatible
+- One-line execution for convenience
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🗂️ Repository Structure
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+└── 📁arkz-scripts
+    └── 📁public
+        └── favicon.svg
+        └── menu.ps1
+        └── move_nikke_folder.ps1
+    └── 📁src
+        └── 📁pages
+            └── index.ts
+    ...
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## ⚠️ Disclaimer
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+These scripts are fan-made tools and are not officially affiliated with, authorized, maintained, sponsored, or endorsed by Shift Up or any of its affiliates or subsidiaries. Use at your own discretion.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🤝 Contributing
 
-## 🧞 Commands
+We welcome contributions! If you have ideas for new scripts or improvements to existing ones, feel free to open an issue or submit a pull request.
 
-All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Happy gaming, Commanders! 🎖️

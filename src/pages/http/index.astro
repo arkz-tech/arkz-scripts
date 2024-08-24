@@ -1,39 +1,68 @@
 ---
-const files = import.meta.glob('/public/*.ps1')
+const nikkeScripts = import.meta.glob('/public/*.ps1');
+const baseUrl = new URL(Astro.request.url).origin;
 
-// {
-//   '/public/menu.ps1': [Function: /public/menu.ps1],
-//   '/public/move_nikke_folder.ps1': [Function: /public/move_nikke_folder.ps1]      
-// }
-console.log(files)
+interface ScriptInfo {
+  title: string;
+  description: string;
+  utility: string;
+    file: string;
+}
 
-const url = new URL(Astro.request.url).origin
+const scriptInfo: Record<string, ScriptInfo> = {
+  "move_nikke_folder": {
+    title: "NIKKE Data Relocation",
+    description: "Safely move NIKKE game data to a new location",
+    utility: "Optimizes storage and improves game performance",
+    file: "move_nikke_folder.ps1"
+  },
+  "nikke_command_center": {
+    title: "Command Center Interface",
+    description: "Central hub for all NIKKE utilities",
+    utility: "Provides easy access to all NIKKE management tools",
+
+    file: "nikke_command_center.ps1"
+  }
+};
 
 ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Scripts</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <title>NIKKE: Goddess of Victory - Command Center Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900 text-gray-100 font-sans">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">HTTP Directory</h1>
-        <ul class="list-disc space-y-2">
+        <h1 class="text-4xl font-bold text-blue-400 mb-2">NIKKE: Goddess of Victory</h1>
+        <h2 class="text-2xl font-semibold text-teal-400 mb-6">Command Center Directory</h2>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {
-                Object.keys(files).map((file) => {
+                Object.keys(nikkeScripts).map((script) => {
+                    const scriptName = script.replace('/public/', '').replace('.ps1', '');
+                    const info = scriptInfo[scriptName] || {
+                        title: scriptName.replace(/_/g, ' ').toUpperCase(),
+                        description: "NIKKE utility script",
+                        utility: "Enhances NIKKE gameplay experience"
+                    };
                     return (
-                        <li>
-                            <a href={`${url}/${file.replace('/public/', '')}`} class="text-blue-500 hover:underline">
-                                {file.replace('/public/', '')}
-                            </a>
-                        </li>
+                        <div class="bg-gray-800 rounded-lg shadow-md p-6 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
+                            <h3 class="text-xl font-semibold text-blue-300 mb-2">{info.title}</h3>
+                            <p class="text-gray-300 mb-2">{info.description}</p>
+                            <p class="text-teal-400 italic mb-4">{info.utility}</p>
+                            <a href={`${baseUrl}/${info.file}`} class="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300 ease-in-out">Access Utility</a>
+                        </div>
                     );
                 })
             }
-        </ul>
+        </div>
     </div>
+    <footer class="mt-12 text-center text-gray-500">
+        <p>Arkz Tech Command Center &copy; 2024</p>
+        <p class="mt-1">For NIKKE: Goddess of Victory Commanders</p>
+    </footer>
 </body>
 </html>

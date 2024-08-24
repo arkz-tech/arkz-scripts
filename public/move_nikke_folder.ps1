@@ -1,92 +1,100 @@
 <#
-===============================================================
-Script created for arkz.tech
-Created by Valentin Marquez
-===============================================================
+=======================================================================
+    NIKKE: Goddess of Victory - Data Migration Utility
+    Created for Arkz Tech Command Center
+    Version: 2.0
+    Author: Commander Valentin Marquez
+=======================================================================
 #>
 
-# Function to check if running as admin
-function Test-Admin {
-    [Security.Principal.WindowsPrincipal]$user = [Security.Principal.WindowsIdentity]::GetCurrent()
-    return $user.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+# Function to verify administrator privileges
+function Confirm-AdminPrivileges {
+    $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal $currentUser
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-# Function to show progress
-function Show-Progress {
+# Function to display progress with NIKKE theme
+function Show-NikkeProgress {
     param ([int]$Percent)
-    Write-Progress -Activity "Moving NIKKE files and creating symlink" -Status "$Percent% Complete" -PercentComplete $Percent
+    $progressChar = ">"
+    $emptyChar = "-"
+    $barLength = 50
+    $filledLength = [math]::Round($Percent / 100 * $barLength)
+    $bar = $progressChar * $filledLength + $emptyChar * ($barLength - $filledLength)
+    Write-Host ("[{0}] {1}% Complete" -f $bar, $Percent) -ForegroundColor Cyan
 }
 
-# Function to get folder size
-function Get-FolderSize {
+# Function to calculate folder size in GB
+function Get-FolderSizeGB {
     param ([string]$Path)
     $size = (Get-ChildItem $Path -Recurse | Measure-Object -Property Length -Sum).Sum
     return [math]::Round($size / 1GB, 2)
 }
 
-# Function to clear screen and show banner
-function Clear-Screen {
+# Function to display NIKKE-themed banner
+function Show-NikkeBanner {
     Clear-Host
-    Write-Host "====================================="
-    Write-Host "     NIKKE Folder Move Utility       "
-    Write-Host "         Created by nozz.dev         "
-    Write-Host "====================================="
+    Write-Host "======================================================" -ForegroundColor Magenta
+    Write-Host "     NIKKE: Goddess of Victory - Data Migration       " -ForegroundColor Cyan
+    Write-Host "          Arkz Tech Command Center Utility            " -ForegroundColor Cyan
+    Write-Host "======================================================" -ForegroundColor Magenta
     Write-Host ""
 }
 
-# Check if running as admin
-if (-not (Test-Admin)) {
-    Clear-Screen
-    Write-Host "This script needs to be run as an administrator." -ForegroundColor Red
-    Write-Host "Please restart this script with elevated privileges (Run as Administrator)." -ForegroundColor Yellow
+# Main execution block
+if (-not (Confirm-AdminPrivileges)) {
+    Show-NikkeBanner
+    Write-Host "Error: Insufficient permissions detected." -ForegroundColor Red
+    Write-Host "Please restart this utility with administrator privileges." -ForegroundColor Yellow
     Write-Host ""
     Read-Host "Press any key to exit..."
     exit 1
 }
 
-# Find default NIKKE folder
-Clear-Screen
+# Find default NIKKE data folder
+Show-NikkeBanner
 $defaultPath = "$env:USERPROFILE\AppData\LocalLow\Unity\com_proximabeta_NIKKE"
 if (Test-Path $defaultPath) {
     $sourcePath = $defaultPath
 } else {
-    $sourcePath = Read-Host "Default NIKKE folder not found. Please enter the full path to the NIKKE folder"
+    $sourcePath = Read-Host "NIKKE data not found. Please enter the full path to your NIKKE data folder"
     if (-not (Test-Path $sourcePath)) {
-        Write-Error "The specified path does not exist. Exiting script."
+        Write-Error "The specified path does not exist. Aborting mission."
         exit 1
     }
 }
 
 # Get destination path from user
 do {
-    $destinationPath = Read-Host "Enter the full path where you want to move the NIKKE folder"
+    $destinationPath = Read-Host "Enter the full path for NIKKE data relocation"
     $folderName = Split-Path $sourcePath -Leaf
     $fullDestinationPath = Join-Path $destinationPath $folderName
 
     if (Test-Path $fullDestinationPath) {
-        Write-Host "A folder named $folderName already exists at $destinationPath. Please choose a different location."
+        Write-Host "Warning: A folder named $folderName already exists at $destinationPath." -ForegroundColor Yellow
+        Write-Host "Please choose a different location to avoid data conflicts." -ForegroundColor Yellow
     }
 } while (Test-Path $fullDestinationPath)
 
-# Create destination directory if it doesn't exist
+# Prepare for data transfer
 if (-not (Test-Path $destinationPath)) {
     New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
 }
 
-# Check if moving to a different drive
 $sourceDrive = (Get-Item $sourcePath).PSDrive.Name
 $destDrive = (Get-Item $destinationPath).PSDrive.Name
-$differentDrive = $sourceDrive -ne $destDrive
+$crossDriveOperation = $sourceDrive -ne $destDrive
 
-# Get total size and item count
-$totalSize = Get-FolderSize $sourcePath
+$totalSize = Get-FolderSizeGB $sourcePath
 $totalItems = (Get-ChildItem $sourcePath -Recurse).Count
 $currentItem = 0
 
-Clear-Screen
-Write-Host "Moving $folderName (${totalSize}GB) to $fullDestinationPath"
+Show-NikkeBanner
+Write-Host "Mission Briefing:" -ForegroundColor Green
+Write-Host "Relocating NIKKE data (${totalSize}GB) to $fullDestinationPath" -ForegroundColor Cyan
 
-# Move files
+# Execute data transfer
 Get-ChildItem -Path $sourcePath -Recurse | ForEach-Object {
     $destFile = $_.FullName.Replace($sourcePath, $fullDestinationPath)
     $destDir = Split-Path $destFile -Parent
@@ -98,20 +106,21 @@ Get-ChildItem -Path $sourcePath -Recurse | ForEach-Object {
     Move-Item $_.FullName $destFile -Force
     
     $currentItem++
-    Show-Progress -Percent ([math]::Round(($currentItem / $totalItems) * 100))
+    $percentComplete = [math]::Round(($currentItem / $totalItems) * 100)
+    Show-NikkeProgress -Percent $percentComplete
 }
 
-# Remove original folder if moving to a different drive
-if ($differentDrive) {
+# Clean up and create symlink
+if ($crossDriveOperation) {
     Remove-Item -Path $sourcePath -Recurse -Force
 }
 
-# Create symlink
 cmd /c mklink /j $sourcePath $fullDestinationPath
 
-Clear-Screen
-Write-Host "Operation completed successfully!"
-Write-Host "Symlink created at $sourcePath pointing to $fullDestinationPath"
+Show-NikkeBanner
+Write-Host "Mission Accomplished!" -ForegroundColor Green
+Write-Host "NIKKE data successfully relocated and linked." -ForegroundColor Cyan
+Write-Host "New data location: $fullDestinationPath" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "Thank you for using this script!"
-Write-Host "Visit: nozz.dev"
+Write-Host "Thank you for using Arkz Tech Command Center utilities." -ForegroundColor Magenta
+Write-Host "For more NIKKE resources, visit: arkz.tech" -ForegroundColor Yellow
