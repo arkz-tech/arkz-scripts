@@ -1,3 +1,4 @@
+
 # ==============================================
 # Script Menu Utility - Created for arkz.tech
 # ==============================================
@@ -16,9 +17,7 @@ function Show-Menu {
     Write-Host "          Created by arkz.tech       "
     Write-Host "====================================="
     Write-Host ""
-    Write-Host "1. Move NIKKE Folder and Create Symlink"
-    Write-Host "2. Another Script Option"
-    Write-Host "3. Yet Another Script Option"
+    Write-Host "1. Move NIKKE Folder to another Hard Drive"
     Write-Host "4. Exit"
     Write-Host ""
     $choice = Read-Host "Select an option (1-4)"
@@ -56,15 +55,7 @@ do {
     switch ($choice) {
         1 {
             # Option 1 - Move NIKKE Folder
-            Execute-Script -url "https://arkz.tech/scripts/move_nikke_folder.ps1"
-        }
-        2 {
-            # Option 2 - Another script
-            Execute-Script -url "https://arkz.tech/remote/another_script"
-        }
-        3 {
-            # Option 3 - Yet another script
-            Execute-Script -url "https://arkz.tech/remote/yet_another_script"
+            Execute-Script -url "https://scripts.arkz.tech/move_nikke_folder.ps1"
         }
         4 {
             Write-Host "Exiting... Thank you for using this utility." -ForegroundColor Green
