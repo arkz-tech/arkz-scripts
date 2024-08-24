@@ -2,7 +2,7 @@ node_modules/
 dist/
 *.tsbuildinfo
 .DS_Store
-.vercel
+.vercel/*
 .netlify
 _site/
 scripts/smoke/*-main/
