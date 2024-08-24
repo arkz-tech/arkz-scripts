@@ -1,5 +1,5 @@
 ---
-const nikkeScripts = import.meta.glob('/public/*.ps1');
+const nikkeScripts = import.meta.glob('/public/*.ps1', { query: '?raw' });
 const baseUrl = new URL(Astro.request.url).origin;
 
 interface ScriptInfo {
