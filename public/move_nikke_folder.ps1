@@ -20,8 +20,8 @@ function Show-NikkeProgress {
         [int]$Percent,
         [int]$Width = 50
     )
-    $progressChar = "▓"
-    $emptyChar = "░"
+    $progressChar = [char]0x2593
+    $emptyChar = [char]0x2591
     $completed = [math]::Round(($Width * $Percent) / 100)
     $remaining = $Width - $completed
     $progressBar = "$progressChar" * $completed + "$emptyChar" * $remaining
