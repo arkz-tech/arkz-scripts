@@ -2,7 +2,7 @@
 =======================================================================
     NIKKE: Goddess of Victory - Data Migration Utility
     Created for Arkz Tech Command Center
-    Version: 2.0
+    Version: 2.1
     Author: Commander Valentin Marquez
 =======================================================================
 #>
@@ -14,15 +14,18 @@ function Confirm-AdminPrivileges {
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-# Function to display progress with NIKKE theme
+# Improved function to display progress with NIKKE theme
 function Show-NikkeProgress {
-    param ([int]$Percent)
-    $progressChar = ">"
-    $emptyChar = "-"
-    $barLength = 50
-    $filledLength = [math]::Round($Percent / 100 * $barLength)
-    $bar = $progressChar * $filledLength + $emptyChar * ($barLength - $filledLength)
-    Write-Host ("[{0}] {1}% Complete" -f $bar, $Percent) -ForegroundColor Cyan
+    param (
+        [int]$Percent,
+        [int]$Width = 50
+    )
+    $progressChar = "▓"
+    $emptyChar = "░"
+    $completed = [math]::Round(($Width * $Percent) / 100)
+    $remaining = $Width - $completed
+    $progressBar = "$progressChar" * $completed + "$emptyChar" * $remaining
+    Write-Host "`r[$progressBar] $Percent% Complete" -NoNewline -ForegroundColor Cyan
 }
 
 # Function to calculate folder size in GB
@@ -89,10 +92,12 @@ $crossDriveOperation = $sourceDrive -ne $destDrive
 $totalSize = Get-FolderSizeGB $sourcePath
 $totalItems = (Get-ChildItem $sourcePath -Recurse).Count
 $currentItem = 0
+$lastPercent = 0
 
 Show-NikkeBanner
 Write-Host "Mission Briefing:" -ForegroundColor Green
 Write-Host "Relocating NIKKE data (${totalSize}GB) to $fullDestinationPath" -ForegroundColor Cyan
+Write-Host ""
 
 # Execute data transfer
 Get-ChildItem -Path $sourcePath -Recurse | ForEach-Object {
@@ -107,7 +112,12 @@ Get-ChildItem -Path $sourcePath -Recurse | ForEach-Object {
     
     $currentItem++
     $percentComplete = [math]::Round(($currentItem / $totalItems) * 100)
-    Show-NikkeProgress -Percent $percentComplete
+    
+    # Update progress bar only when the percentage changes
+    if ($percentComplete -ne $lastPercent) {
+        Show-NikkeProgress -Percent $percentComplete
+        $lastPercent = $percentComplete
+    }
 }
 
 # Clean up and create symlink
@@ -117,6 +127,7 @@ if ($crossDriveOperation) {
 
 cmd /c mklink /j $sourcePath $fullDestinationPath
 
+Write-Host "`n"  # Add a newline after the progress bar
 Show-NikkeBanner
 Write-Host "Mission Accomplished!" -ForegroundColor Green
 Write-Host "NIKKE data successfully relocated and linked." -ForegroundColor Cyan
