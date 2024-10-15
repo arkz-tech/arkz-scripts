@@ -2,7 +2,7 @@
 =======================================================================
     NIKKE: Goddess of Victory - NIKKE OCR Downloader
     Created for Arkz Tech Command Center
-    Version: 1.1
+    Version: 1.2
     Author: Commander Valentin Marquez
 =======================================================================
 #>
@@ -40,8 +40,8 @@ function Download-NikkeOCR {
     $repo = "arkz-tech/nikke-ocr"
     $releases = "https://api.github.com/repos/$repo/releases"
     
-    Write-Host "Fetching latest release information..." -ForegroundColor Yellow
     try {
+        Write-Host "Fetching latest release information..." -ForegroundColor Yellow
         $latestRelease = (Invoke-WebRequest $releases | ConvertFrom-Json)[0]
         $tag = $latestRelease.tag_name
         $downloadUrl = "https://github.com/$repo/releases/download/$tag/NIKKE-OCR.zip"
@@ -73,11 +73,20 @@ function Download-NikkeOCR {
     } catch {
         Write-Host "An error occurred while downloading or extracting NIKKE OCR:" -ForegroundColor Red
         Write-Host $_.Exception.Message -ForegroundColor Red
+        Write-Host "Stack Trace:" -ForegroundColor Red
+        Write-Host $_.Exception.StackTrace -ForegroundColor Red
     }
 }
 
-Show-NikkeBanner
-Download-NikkeOCR
+try {
+    Show-NikkeBanner
+    Download-NikkeOCR
+} catch {
+    Write-Host "An unexpected error occurred:" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Red
+    Write-Host "Stack Trace:" -ForegroundColor Red
+    Write-Host $_.Exception.StackTrace -ForegroundColor Red
+}
 
-Write-Host "`nPress any key to return to the main menu..." -ForegroundColor Yellow
+Write-Host "`nPress any key to exit..." -ForegroundColor Yellow
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

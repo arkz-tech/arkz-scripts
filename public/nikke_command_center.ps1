@@ -2,7 +2,7 @@
 =======================================================================
     NIKKE: Goddess of Victory - Command Center
     Created for Arkz Tech
-    Version: 2.0
+    Version: 2.1
     Author: Commander Valentin Marquez
 =======================================================================
 #>
@@ -23,7 +23,7 @@ function Show-CommandCenterMenu {
     Write-Host "======================================================" -ForegroundColor Magenta
     Write-Host ""
     Write-Host "1. Initiate NIKKE Data Relocation Protocol" -ForegroundColor Yellow
-    Write-Host "2. [Placeholder for future utility]" -ForegroundColor Gray
+    Write-Host "2. Download NIKKE OCR" -ForegroundColor Yellow
     Write-Host "3. [Placeholder for future utility]" -ForegroundColor Gray
     Write-Host "4. Exit Command Center" -ForegroundColor Red
     Write-Host ""
@@ -32,7 +32,7 @@ function Show-CommandCenterMenu {
 }
 
 # Function to execute selected utility
-function Execute-NikkeUtility {
+function Invoke-NikkeUtility {
     param (
         [string]$url
     )
@@ -62,7 +62,11 @@ do {
     switch ($choice) {
         1 {
             # NIKKE Data Relocation Protocol
-            Execute-NikkeUtility -url "https://scripts.arkz.tech/move_nikke_folder.ps1"
+            Invoke-NikkeUtility -url "https://scripts.arkz.tech/move_nikke_folder.ps1"
+        }
+        2 {
+            # Download NIKKE OCR
+            Invoke-NikkeUtility -url "https://scripts.arkz.tech/download_nikke_ocr.ps1"
         }
         4 {
             Write-Host "Exiting NIKKE Command Center. Thank you for your service, Commander." -ForegroundColor Green
