@@ -6,7 +6,7 @@ interface ScriptInfo {
   title: string;
   description: string;
   utility: string;
-    file: string;
+  file: string;
 }
 
 const scriptInfo: Record<string, ScriptInfo> = {
@@ -20,8 +20,13 @@ const scriptInfo: Record<string, ScriptInfo> = {
     title: "Command Center Interface",
     description: "Central hub for all NIKKE utilities",
     utility: "Provides easy access to all NIKKE management tools",
-
     file: "nikke_command_center.ps1"
+  },
+  "download_nikke_ocr": {
+    title: "NIKKE OCR Downloader",
+    description: "Download and install the NIKKE OCR tool",
+    utility: "Enables character info extraction from screenshots",
+    file: "download_nikke_ocr.ps1"
   }
 };
 
